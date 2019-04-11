@@ -12,7 +12,7 @@ import javafx.geometry.*;
 import java.io.*;
 
 public class Main extends Application {
-    TextField tf1, tf2, tf3, tf4, tf5, tf6, tf7, tf8, tf9, tf10; // поля для ввода размеров
+    TextField tf []= new TextField[10];                          // поля для ввода размеров
     TextField tflength;                                          // длина ДЭ
     TextField tfQuan ;                                           // поле для ввода кол-ва шт.
     TextField tfPrice;                                           // поле для ввода цены за 1 м.п.
@@ -21,7 +21,7 @@ public class Main extends Application {
     Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,lbSell, lbprofit;                         // поле для вывода штрипса, количесва шт. в листе и цены
 
     @Override
-    public void start(Stage myStage){
+    public void start(Stage myStage)throws Exception{
         myStage.setTitle("Калькулятор расчета доборных элементов v.1.0");
 
         FlowPane rootNode = new FlowPane(10,10);
@@ -46,28 +46,30 @@ public class Main extends Application {
 
         cbRal = new CheckBox("RAL");
 
-        tf1 = new TextField();
-        //tf1.setPromptText("Введите имя файла1.");
-        tf1.setPrefColumnCount(4);
+        tf[0]=new TextField();
+        //tf[0].setPromptText("Введите имя файла1.");
+        tf[0].setPrefColumnCount(4);
 
-        tf2 = new TextField();
-        tf2.setPrefColumnCount(4);
-        tf3 = new TextField();
-        tf3.setPrefColumnCount(4);
-        tf4 = new TextField();
-        tf4.setPrefColumnCount(4);
-        tf5 = new TextField();
-        tf5.setPrefColumnCount(4);
-        tf6 = new TextField();
-        tf6.setPrefColumnCount(4);
-        tf7 = new TextField();
-        tf7.setPrefColumnCount(4);
-        tf8 = new TextField();
-        tf8.setPrefColumnCount(4);
-        tf9 = new TextField();
-        tf9.setPrefColumnCount(4);
-        tf10 = new TextField();
-        tf10.setPrefColumnCount(4);
+        tf[1] = new TextField();
+        tf[1].setPrefColumnCount(4);
+        tf[2] = new TextField();
+        tf[2].setPrefColumnCount(4);
+        tf[3] = new TextField();
+        tf[3].setPrefColumnCount(4);
+        tf[4] = new TextField();
+        tf[4].setPrefColumnCount(4);
+        tf[5] = new TextField();
+        tf[5].setPrefColumnCount(4);
+        tf[6] = new TextField();
+        tf[6].setPrefColumnCount(4);
+        tf[7] = new TextField();
+        tf[7].setPrefColumnCount(4);
+        tf[8] = new TextField();
+        tf[8].setPrefColumnCount(4);
+        tf[9] = new TextField();
+        tf[9].setPrefColumnCount(4);
+
+
 
         tflength = new TextField();
         tflength.setPrefColumnCount(4);
@@ -77,6 +79,19 @@ public class Main extends Application {
 
         tfPrice = new TextField();
         tfPrice.setPrefColumnCount(7);
+
+
+        btStart.setOnAction((ae) ->{
+            int sum = 0;
+            for(int i=0; i < tf.length;i++){
+                sum += Integer.parseInt(tf[i].getText()) ;
+            }
+            int quan = 1250 / sum;
+            lbSht.setText("Штрипс(мм): "+ sum);
+            lbQuan.setText("Кол-во шт в листе: " + quan);
+
+    });
+
 
 
 /*
@@ -129,11 +144,10 @@ public class Main extends Application {
         Separator separator3 = new Separator();
         separator3.setPrefWidth(700);
 
-        rootNode.getChildren().addAll(tf1, tf2, tf3, tf4, tf5, tf6, tf7, tf8, tf9, tf10, separator1,
+        rootNode.getChildren().addAll(tf[0], tf[1], tf[2], tf[3], tf[4], tf[5], tf[6], tf[7], tf[8], tf[9], separator1,
                 lblength, tflength, lbQuanS, tfQuan,lbSht,lbQuan,separator2,
                 lbPrice, tfPrice, cbRal, btClean, btStart,separator3,
                 lbQuanL, lbSell, lbprofit);
-
         myStage.show();
 
     }
