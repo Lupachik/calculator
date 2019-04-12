@@ -18,7 +18,7 @@ public class Main extends Application {
     TextField tfPrice;                                           // поле для ввода цены за 1 м.п.
     Button btStart, btClean;                                     // запуск расчета, очистка полей размеров
     CheckBox cbRal;                                              // отметка если полимерное покрытие
-    Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,lbSell, lbprofit;                         // поле для вывода штрипса, количесва шт. в листе и цены
+    Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,lbSell, lbprofit; // поле для вывода штрипса, цены и т.д.
 
     @Override
     public void start(Stage myStage)throws Exception{
@@ -50,7 +50,7 @@ public class Main extends Application {
            tf[i] = new TextField();
            tf[i].setPrefColumnCount(3);
        }
-       
+
         tflength = new TextField();
         tflength.setPrefColumnCount(3);
 
@@ -61,58 +61,68 @@ public class Main extends Application {
         tfPrice.setPrefColumnCount(3);
 
         btStart.setOnAction((ae) ->{
-            int sum = 0;
-            int count =0; // считает количество гибов и резов в ДЭ
-            for(int i=0; i < tf.length;i++){
-                if(tf[i].getText().equals("")) continue;
-                else {
-                    sum += Integer.parseInt(tf[i].getText());
-                    count++;
+            try {
+                int sum = 0;
+                int count = 0; // считает количество гибов и резов в ДЭ
+                for (int i = 0; i < tf.length; i++) {
+                    if (tf[i].getText().equals("")) continue;
+                    else {
+                        sum += Integer.parseInt(tf[i].getText());
+                        count++;
+                    }
                 }
-            }
+                int ral;
+                if (cbRal.isSelected()) ral = 5;
+                else ral = 0;
 
-            int quan = 1250 / sum;
-            lbSht.setText("Штрипс(мм): "+ sum);
-            lbQuan.setText("Кол-во шт в листе: " + quan);
-            int list1 = Integer.parseInt(tfQuan.getText());
-            int price = Integer.parseInt(tfPrice.getText());
-            int length = Integer.parseInt(tflength.getText());
-            int listsum = 0;
-            int ost = 0;
+                int quan = 1250 / sum;
+                lbSht.setText("Штрипс(мм): " + sum);
+                lbQuan.setText("Кол-во шт в листе: " + quan);
+                int list1 = Integer.parseInt(tfQuan.getText());
+                int price = Integer.parseInt(tfPrice.getText());
+                int length = Integer.parseInt(tflength.getText());
+                int listsum = 0;
+                int ost = 0;
 
-            if(list1%quan > 0) {
-                listsum = (list1 /quan) +1;
-                ost = (1-(list1%quan)/ quan)*price / list1;
-            }
-            else {
-                listsum = list1 /quan;
-            }
+                if (list1 % quan > 0) {
+                    listsum = (list1 / quan) + 1;
+                    ost = (1 - (list1 % quan) / quan) * price / list1;
+                } else {
+                    listsum = list1 / quan;
+                }
 
-            int sell1 =(int)((price * (1+ 0.1*count)/quan)+ ost);
-            int sell2 = (int)(price * (1+ 0.1*count*quan)/quan);
-            lbSell.setText("Цена ДЭ за м.п.: "+ sell1 + " (Старая цена: " + sell2+ ")" );
-            lbQuanL.setText("Кол-во листов на заказ(шт): " + listsum);
+                lbQuanL.setText("Кол-во листов на заказ(шт): " + listsum);
+                int sell1 = (int) ((price * (1 + 0.1 * count) / quan) + ost + ral);
+                int sell2 = (int) (price * (1 + 0.1 * count * quan) / quan);
+                lbSell.setText("Цена ДЭ за м.п.: " + sell1 + " (Старая цена: " + sell2 + ")");
 
-            double profit = 0.00;
-            double profit1 = 0.00;
 
-            profit = (list1 * sell1 - price * listsum)* length /1000;
-            profit1 = (list1 * sell2 - price * listsum)* length /1000;
+                double profit = 0.00;
+                double profit1 = 0.00;
 
-            lbprofit.setText("Прибыль по заказу(руб): " + profit + " ("+ profit1+")");
+                profit = (list1 * sell1 - price * listsum) * length / 1000;
+                profit1 = (list1 * sell2 - price * listsum) * length / 1000;
+
+                lbprofit.setText("Прибыль по заказу(руб): " + profit + " (" + profit1 + ")");
+            }catch (Exception e){}
         });
 
         //Использовать разделитель для лучшей организации ввода
-        Separator separator1 = new Separator();
+        Separator separator [] = new Separator[3];
+        for(int i=0; i< separator.length; i++) {
+            separator[i]= new Separator();
+            separator[i].setPrefWidth(700);
+        }
+  /*
         separator1.setPrefWidth(700);
         Separator separator2 = new Separator();
         separator2.setPrefWidth(700);
         Separator separator3 = new Separator();
         separator3.setPrefWidth(700);
-
-        rootNode.getChildren().addAll(tf[0], tf[1], tf[2], tf[3], tf[4], tf[5], tf[6], tf[7], tf[8], tf[9], separator1,
-                lblength, tflength, lbQuanS, tfQuan,lbSht,lbQuan,separator2,
-                lbPrice, tfPrice, cbRal, btClean, btStart,separator3,
+*/
+        rootNode.getChildren().addAll(tf[0], tf[1], tf[2], tf[3], tf[4], tf[5], tf[6], tf[7], tf[8], tf[9], separator[0],
+                lblength, tflength, lbQuanS, tfQuan,lbSht,lbQuan,separator[1],
+                lbPrice, tfPrice, cbRal, btClean, btStart,separator[2],
                 lbQuanL, lbSell, lbprofit);
         myStage.show();
     }
