@@ -60,6 +60,7 @@ public class Main extends Application {
         tfPrice = new TextField();
         tfPrice.setPrefColumnCount(3);
 
+        // описание кнопки запуск
         btStart.setOnAction((ae) ->{
             try {
                 int sum = 0;
@@ -105,6 +106,15 @@ public class Main extends Application {
 
                 lbprofit.setText("Прибыль по заказу(руб): " + profit + " (" + profit1 + ")");
             }catch (Exception e){}
+        });
+
+        // описание кнопки очистить
+        btClean.setOnAction((ae) -> {
+            tfPrice.setText("");
+            tflength.setText("");
+            tfQuan.setText("");
+            for(int i=0; i < tf.length;i++)
+                tf[i].setText("");
         });
 
         //Использовать разделитель для лучшей организации ввода
