@@ -46,96 +46,62 @@ public class Main extends Application {
 
         cbRal = new CheckBox("RAL");
 
-        tf[0]=new TextField();
-        //tf[0].setPromptText("Введите имя файла1.");
-        tf[0].setPrefColumnCount(4);
-
-        tf[1] = new TextField();
-        tf[1].setPrefColumnCount(4);
-        tf[2] = new TextField();
-        tf[2].setPrefColumnCount(4);
-        tf[3] = new TextField();
-        tf[3].setPrefColumnCount(4);
-        tf[4] = new TextField();
-        tf[4].setPrefColumnCount(4);
-        tf[5] = new TextField();
-        tf[5].setPrefColumnCount(4);
-        tf[6] = new TextField();
-        tf[6].setPrefColumnCount(4);
-        tf[7] = new TextField();
-        tf[7].setPrefColumnCount(4);
-        tf[8] = new TextField();
-        tf[8].setPrefColumnCount(4);
-        tf[9] = new TextField();
-        tf[9].setPrefColumnCount(4);
-
-
-
+       for(int i = 0; i < tf.length; i++){
+           tf[i] = new TextField();
+           tf[i].setPrefColumnCount(3);
+       }
+       
         tflength = new TextField();
-        tflength.setPrefColumnCount(4);
+        tflength.setPrefColumnCount(3);
 
         tfQuan = new TextField();
-        tfQuan.setPrefColumnCount(4);
+        tfQuan.setPrefColumnCount(3);
 
         tfPrice = new TextField();
-        tfPrice.setPrefColumnCount(7);
-
+        tfPrice.setPrefColumnCount(3);
 
         btStart.setOnAction((ae) ->{
             int sum = 0;
+            int count =0; // считает количество гибов и резов в ДЭ
             for(int i=0; i < tf.length;i++){
-                sum += Integer.parseInt(tf[i].getText()) ;
+                if(tf[i].getText().equals("")) continue;
+                else {
+                    sum += Integer.parseInt(tf[i].getText());
+                    count++;
+                }
             }
+
             int quan = 1250 / sum;
             lbSht.setText("Штрипс(мм): "+ sum);
             lbQuan.setText("Кол-во шт в листе: " + quan);
+            int list1 = Integer.parseInt(tfQuan.getText());
+            int price = Integer.parseInt(tfPrice.getText());
+            int length = Integer.parseInt(tflength.getText());
+            int listsum = 0;
+            int ost = 0;
 
-    });
-
-
-
-/*
-        button.setOnAction((ae)-> {
-            int i = 0, j = 0, k = 0;
-
-            // убедимся что введены имена обоих файлов
-            if (tf1.getText().equals("")) {
-                result.setText("Отсутствует имя первого файла");
-                return;
+            if(list1%quan > 0) {
+                listsum = (list1 /quan) +1;
+                ost = (1-(list1%quan)/ quan)*price / list1;
             }
-            if (tf2.getText().equals("")) {
-                result.setText("Отсутствует имя второго файла");
-                return;
-
-            // сравнить файлы, используя инструкцию try с ресурсами
-            try (FileInputStream f1 = new FileInputStream(tf1.getText());
-                 FileInputStream f2 = new FileInputStream(tf2.getText())) {
-                do {
-                    i = f1.read();
-                    j = f2.read();
-                    k++;
-                    if (i != j & (i - 32) != j & (i + 32) != j) break; // вне зависимости от регистра
-                } while (i != -1 && j != -1);
-
-                if (i != j) {
-                    result.setText("Файлы отличаются");
-                    if (checkBox.isSelected())
-                        checkBox.setText("Позиция расхождения: " + k);
-                    else
-                        checkBox.setText("");
-                } else
-                    result.setText("Файлы одинаковы");
-
-            } catch (IOException exc) {
-                result.setText("Ошибка файла");
+            else {
+                listsum = list1 /quan;
             }
+
+            int sell1 =(int)((price * (1+ 0.1*count)/quan)+ ost);
+            int sell2 = (int)(price * (1+ 0.1*count*quan)/quan);
+            lbSell.setText("Цена ДЭ за м.п.: "+ sell1 + " (Старая цена: " + sell2+ ")" );
+            lbQuanL.setText("Кол-во листов на заказ(шт): " + listsum);
+
+            double profit = 0.00;
+            double profit1 = 0.00;
+
+            profit = (list1 * sell1 - price * listsum)* length /1000;
+            profit1 = (list1 * sell2 - price * listsum)* length /1000;
+
+            lbprofit.setText("Прибыль по заказу(руб): " + profit + " ("+ profit1+")");
         });
 
-
-
-        tf1.setOnAction( (ae) -> button.fire());
-        tf2.setOnAction( (ae) -> button.fire());
-*/
         //Использовать разделитель для лучшей организации ввода
         Separator separator1 = new Separator();
         separator1.setPrefWidth(700);
@@ -149,10 +115,7 @@ public class Main extends Application {
                 lbPrice, tfPrice, cbRal, btClean, btStart,separator3,
                 lbQuanL, lbSell, lbprofit);
         myStage.show();
-
     }
-
-
     public static void main(String[] args) {
         launch(args);
     }
