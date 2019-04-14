@@ -18,7 +18,7 @@ public class Main extends Application {
     TextField tfPrice;                                           // поле для ввода цены за 1 м.п.
     Button btStart, btClean;                                     // запуск расчета, очистка полей размеров
     CheckBox cbRal;                                              // отметка если полимерное покрытие
-    Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,lbSell, lbprofit; // поле для вывода штрипса, цены и т.д.
+    Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,lbSell, lbprofit, lbost; // поле для вывода штрипса, цены и т.д.
 
     @Override
     public void start(Stage myStage)throws Exception{
@@ -28,7 +28,7 @@ public class Main extends Application {
 
         rootNode.setAlignment(Pos.CENTER);
 
-        Scene myScene = new Scene(rootNode, 700, 200);
+        Scene myScene = new Scene(rootNode, 700, 250);
 
         myStage.setScene(myScene);
 
@@ -40,6 +40,7 @@ public class Main extends Application {
         lbQuanL = new Label("Кол-во листов на заказ(шт): ");
         lbSell = new Label("Цена ДЭ за м.п. : ");
         lbprofit = new Label("Прибыль по заказу(руб): ");
+        lbost = new Label("Остаток металла: ширина(мм) и кол-во(шт)");
 
         btStart = new Button("Запуск");
         btClean = new Button("Очистить");
@@ -105,6 +106,25 @@ public class Main extends Application {
                 profit1 = (list1 * sell2 - price * listsum) * length / 1000;
 
                 lbprofit.setText("Прибыль по заказу(руб): " + profit + " (" + profit1 + ")");
+
+                //расчет остатков металла
+                int ost1 = 0,ost2 = 0;
+                int num1, num2;
+                ost1 = 1250 - sum*quan;
+                if(list1%quan > 0 & ost1 != 0){
+                    num1 = listsum -1;
+                    ost2 = 1250 -((list1 % quan) * sum);
+                    num2 = 1;
+                    lbost.setText("Остаток металла длинной "+ length + ": " + ost1 + "(мм) "
+                            + num1 + "(шт) и "+
+                            ost2 + "(мм) " + num2 + "(шт)");
+                }else if(list1%quan == 0 & ost1 == 0){
+                    lbost.setText("Остаток металла: " + "Нет остатков!");
+                } else if(list1%quan == 0 & ost1 != 0){
+                num1 = listsum;
+                lbost.setText("Остаток металла длинной " + length + ": " + ost1 + "(мм) " + num1 + "(шт)");
+                }
+
             }catch (Exception e){}
         });
 
@@ -118,7 +138,7 @@ public class Main extends Application {
         });
 
         //Использовать разделитель для лучшей организации ввода
-        Separator separator [] = new Separator[3];
+        Separator separator [] = new Separator[4];
         for(int i=0; i< separator.length; i++) {
             separator[i]= new Separator();
             separator[i].setPrefWidth(700);
@@ -133,7 +153,8 @@ public class Main extends Application {
         rootNode.getChildren().addAll(tf[0], tf[1], tf[2], tf[3], tf[4], tf[5], tf[6], tf[7], tf[8], tf[9], separator[0],
                 lblength, tflength, lbQuanS, tfQuan,lbSht,lbQuan,separator[1],
                 lbPrice, tfPrice, cbRal, btClean, btStart,separator[2],
-                lbQuanL, lbSell, lbprofit);
+                lbQuanL, lbSell, lbprofit, separator[3],
+                lbost);
         myStage.show();
     }
     public static void main(String[] args) {
