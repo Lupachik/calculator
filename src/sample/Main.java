@@ -17,8 +17,8 @@ public class Main extends Application {
     TextField tfQuan ;                                           // поле для ввода кол-ва шт.
     TextField tfPrice;                                           // поле для ввода цены за 1 м.п.
     Button btStart, btClean;                                     // запуск расчета, очистка полей размеров
-    CheckBox cbRal;                                              // отметка если полимерное покрытие
-    Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,lbSell, lbprofit, lbost; // поле для вывода штрипса, цены и т.д.
+    CheckBox cbRal, cbDav;                                              // отметка если полимерное покрытие
+    Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,lbSell, lbprofit, lbost, lbdav; // поле для вывода штрипса, цены и т.д.
 
     @Override
     public void start(Stage myStage)throws Exception{
@@ -41,11 +41,13 @@ public class Main extends Application {
         lbSell = new Label("Цена ДЭ за м.п. : ");
         lbprofit = new Label("Прибыль по заказу(руб): ");
         lbost = new Label("Остаток металла: ширина(мм) и кол-во(шт)");
+        lbdav = new Label(""); // показывает стоимость давальческого проката при выбранном флаге cbDav
 
         btStart = new Button("Запуск");
         btClean = new Button("Очистить");
 
         cbRal = new CheckBox("RAL");
+        cbDav = new CheckBox("Давальческий прокат");
 
        for(int i = 0; i < tf.length; i++){
            tf[i] = new TextField();
@@ -123,7 +125,14 @@ public class Main extends Application {
                 } else if(list1%quan == 0 & ost1 != 0){
                 num1 = listsum;
                 lbost.setText("Остаток металла длинной " + length + ": " + ost1 + "(мм) " + num1 + "(шт)");
+                }else if(list1%quan > 0 & ost1 == 0){
+                    ost2 = 1250 -((list1 % quan) * sum);
+                    num2 = 1;
+                    lbost.setText("Остаток металла длинной " + length + ": " + ost2 + "(мм) " + num2 + "(шт)");
                 }
+
+                // расчет стоимости давальческого проката
+                
 
             }catch (Exception e){}
         });
