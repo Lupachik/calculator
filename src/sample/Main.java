@@ -17,8 +17,9 @@ public class Main extends Application {
     TextField tfQuan ;                                           // поле для ввода кол-ва шт.
     TextField tfPrice;                                           // поле для ввода цены за 1 м.п.
     Button btStart, btClean;                                     // запуск расчета, очистка полей размеров
-    CheckBox cbRal, cbDav;                                              // отметка если полимерное покрытие
-    Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,lbSell, lbprofit, lbost, lbdav; // поле для вывода штрипса, цены и т.д.
+    CheckBox cbRal, cbDav;                                       // отметка если полимерное покрытие
+    Label lblength, lbQuanS, lbSht, lbQuan, lbPrice, lbQuanL,
+            lbSell, lbprofit, lbost, lbdav, lbdavprof;           // поле для вывода штрипса, цены и т.д.
 
     @Override
     public void start(Stage myStage)throws Exception{
@@ -28,7 +29,7 @@ public class Main extends Application {
 
         rootNode.setAlignment(Pos.CENTER);
 
-        Scene myScene = new Scene(rootNode, 700, 250);
+        Scene myScene = new Scene(rootNode, 700, 270);
 
         myStage.setScene(myScene);
 
@@ -42,6 +43,7 @@ public class Main extends Application {
         lbprofit = new Label("Прибыль по заказу(руб): ");
         lbost = new Label("Остаток металла: ширина(мм) и кол-во(шт)");
         lbdav = new Label(""); // показывает стоимость давальческого проката при выбранном флаге cbDav
+        lbdavprof = new Label("");
 
         btStart = new Button("Запуск");
         btClean = new Button("Очистить");
@@ -83,7 +85,12 @@ public class Main extends Application {
                 lbSht.setText("Штрипс(мм): " + sum);
                 lbQuan.setText("Кол-во шт в листе: " + quan);
                 int list1 = Integer.parseInt(tfQuan.getText());
-                int price = Integer.parseInt(tfPrice.getText());
+
+                // поле прайса для расчета давльческого проката
+                int price;
+                if(tfPrice.getText().equals("")) price = 0;
+                else price = Integer.parseInt(tfPrice.getText());
+
                 int length = Integer.parseInt(tflength.getText());
                 int listsum = 0;
                 int ost = 0;
@@ -132,7 +139,23 @@ public class Main extends Application {
                 }
 
                 // расчет стоимости давальческого проката
-                
+                if (cbDav.isSelected()) {
+                    if(price == 0){
+                        int s1 = 0;
+                        s1= (count*30*1000)/length + ral;
+                        lbdav.setText("Цена 1 м.п. проката: "+ s1);
+                        lbdavprof.setText("Прибыль по заказу: " + s1*list1 + "(руб)");
+                    }else {
+                        int s2 =0;
+                        s2= (count*price*100)/length + ral;
+                        lbdav.setText("Цена 1 м.п. проката: "+s2);
+                        lbdavprof.setText("Прибыль по заказу: " + s2*list1  + "(руб)");
+                    }
+
+                }else {
+                    lbdav.setText("");
+                    lbdavprof.setText("");
+                }
 
             }catch (Exception e){}
         });
@@ -147,7 +170,7 @@ public class Main extends Application {
         });
 
         //Использовать разделитель для лучшей организации ввода
-        Separator separator [] = new Separator[4];
+        Separator separator [] = new Separator[5];
         for(int i=0; i< separator.length; i++) {
             separator[i]= new Separator();
             separator[i].setPrefWidth(700);
@@ -163,7 +186,8 @@ public class Main extends Application {
                 lblength, tflength, lbQuanS, tfQuan,lbSht,lbQuan,separator[1],
                 lbPrice, tfPrice, cbRal, btClean, btStart,separator[2],
                 lbQuanL, lbSell, lbprofit, separator[3],
-                lbost);
+                lbost, separator[4],
+                cbDav, lbdav, lbdavprof);
         myStage.show();
     }
     public static void main(String[] args) {
